@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Reading_Buddy
+﻿namespace Reading_Buddy
 {
     public class Translation
     {
