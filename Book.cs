@@ -1,4 +1,6 @@
-﻿namespace Reading_Buddy
+﻿using VersOne.Epub;
+
+namespace Reading_Buddy
 {
     public class Book
     {
@@ -42,6 +44,11 @@
 			set { _lastReadWord = value; }
 		}
 
+        public Book(EpubBook selectedBook)
+        {
+            Title = selectedBook.Title;
+            Author = selectedBook.Author;
+        }
 
-	}
+    }
 }
