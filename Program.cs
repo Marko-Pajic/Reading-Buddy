@@ -14,10 +14,9 @@ namespace Reading_Buddy
 
             string selectedFile = UI.GetSelectedFileName(bookFiles);
 
-            //EpubBook selectedBook = EpubReader.ReadBook(selectedFile);
-
             EpubBook selectedBook = EpubReader.ReadBook(selectedFile);
 
+            Book book = Mapper.ConvertToCustomClass(selectedBook);
 
             //Book book = new Book(selectedBook);
 
@@ -28,7 +27,7 @@ namespace Reading_Buddy
             //Console.WriteLine();
 
             // Print the table of contents
-            //Console.WriteLine("TABLE OF CONTSystem.NullReferenceException: 'Object reference not set to an instance of an object.'ENTS:");
+            //Console.WriteLine("TABLE OF CONTENT:");
             //PrintTableOfContents();
             //Console.WriteLine();
 
@@ -36,39 +35,22 @@ namespace Reading_Buddy
             //Console.WriteLine("CHAPTERS:");
             //PrintChapters();
 
-            HtmlDocument htmlDocument = new();
-            htmlDocument.LoadHtml(selectedFile);
-
-            HtmlNodeCollection nodes = htmlDocument.DocumentNode.SelectNodes("//body//*");
-            if (nodes != null)
+            for (int i = 0; i < book.Navigation.Count; i++)
             {
-                foreach (HtmlNode node in nodes)
+                EpubNavigationItem navigationItem = book.Navigation[i];
+
+                HtmlDocument htmlDocument = new();
+                htmlDocument.LoadHtml(navigationItem.HtmlContentFile.Content);
+                StringBuilder stringBuilder = new();
+                foreach (HtmlNode node in htmlDocument.DocumentNode.SelectNodes("//text()"))
                 {
-                    Console.WriteLine(node.OuterHtml);
+                    string trimmedText = String.Join(" ", node.InnerText.Split(new char[0], StringSplitOptions.RemoveEmptyEntries));
+                    stringBuilder.AppendLine(trimmedText);
                 }
+                string contentText = stringBuilder.ToString();
+                Console.WriteLine(contentText);
+                Console.WriteLine();
             }
-            else
-            {
-                Console.WriteLine("No nodes found with the provided XPath query.");
-            }
-
-
-            //for (int i = 0; i < selectedBook.Navigation.Count; i++)
-            //{
-            //    EpubNavigationItem navigationItem = selectedBook.Navigation[i];
-
-            //    HtmlDocument htmlDocument = new();
-            //    htmlDocument.LoadHtml(navigationItem.HtmlContentFile.Content);
-            //    StringBuilder stringBuilder = new();
-            //    foreach (HtmlNode node in htmlDocument.DocumentNode.SelectNodes("//text()"))
-            //    {
-            //        string trimmedText = String.Join(" ", node.InnerText.Split(new char[0], StringSplitOptions.RemoveEmptyEntries));
-            //        stringBuilder.AppendLine(trimmedText);
-            //    }
-            //    string contentText = stringBuilder.ToString();
-            //    Console.WriteLine(contentText);
-            //    Console.WriteLine();
-            //}
 
 
             //for (int i = 0; i < selectedBook.Navigation.Count; i++)

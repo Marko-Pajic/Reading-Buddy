@@ -44,11 +44,14 @@ namespace Reading_Buddy
 			set { _lastReadWord = value; }
 		}
 
-        public Book(EpubBook selectedBook)
-        {
-            Title = selectedBook.Title;
-            Author = selectedBook.Author;
-        }
+		private List<EpubNavigationItem> _navigation;
 
-    }
+		public List<EpubNavigationItem> Navigation
+        {
+			get { return _navigation; }
+			set { _navigation = value; }
+		}
+
+
+	}
 }
