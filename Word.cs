@@ -50,5 +50,13 @@
 			set { _wordTranslation = value; }
 		}
 
-	}
+        private int _lastReadWord;
+
+        public int LastReadWord
+        {
+            get { return _lastReadWord; }
+            set { _lastReadWord = value; }
+        }
+
+    }
 }

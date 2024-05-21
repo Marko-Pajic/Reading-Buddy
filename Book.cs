@@ -2,8 +2,8 @@
 
 namespace Reading_Buddy
 {
-    public class Book
-    {
+	public class Book
+	{
 		private string _title;
 
 		public string Title
@@ -36,22 +36,34 @@ namespace Reading_Buddy
 			set { _currentPage = value; }
 		}
 
-		private int _lastReadWord;
-
-		public int LastReadWord
-		{
-			get { return _lastReadWord; }
-			set { _lastReadWord = value; }
-		}
-
 		private List<EpubNavigationItem> _navigation;
 
 		public List<EpubNavigationItem> Navigation
-        {
+		{
 			get { return _navigation; }
 			set { _navigation = value; }
 		}
 
+		private string _chapter;
 
-	}
+		public string Chapter
+		{
+			get { return _chapter; }
+			set { _chapter = value; }
+
+		}
+
+		public List<Chapter> Chapters = new();
+
+        private string _page;
+
+        public string Page
+        {
+            get { return _page; }
+            set { _page = value; }
+
+        }
+
+        public List<Page> Pages = new();
+    }
 }
