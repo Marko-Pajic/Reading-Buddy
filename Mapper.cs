@@ -19,69 +19,57 @@ namespace Reading_Buddy
             b.Title = selectedBook.Title;
             b.Author = selectedBook.Author;
 
+            List<Page> pages = new List<Page>();
+            List<string> pageText = new List<string>();
+            int pageNumber = 1;
+
+            HtmlDocument doc = new HtmlDocument();
+
             foreach (EpubLocalTextContentFile textContentFile in selectedBook.ReadingOrder)
             {
-                HtmlDocument htmlDocument = new();
-                htmlDocument.LoadHtml(textContentFile.Content);
+                doc.LoadHtml(textContentFile.Content);
+                string contentWithoutTags = doc.DocumentNode.InnerText;
 
-                var nodes = htmlDocument.DocumentNode.SelectNodes("//p[@class='calibre1']");
-
-                if (nodes != null)
+                string[] sentences = contentWithoutTags.Split(new char[] { '.', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string sentence in sentences)
                 {
-                    Page page = null;
-                    StringBuilder sb = new StringBuilder();
-
-                    foreach (HtmlNode node in nodes)
+                    if (pageText.Count == 30)
                     {
-                        var anchorNode = node.SelectSingleNode("a[@id]");
-
-                        if (anchorNode != null)
-                        {
-                            // If a page has already been started, add it to the book
-                            if (page != null)
-                            {
-                                page.Text = sb.ToString().Trim();
-                                b.Pages.Add(page);
-                                sb.Clear();
-                            }
-
-                            // Start a new page
-                            page = new Page
-                            {
-                                Number = anchorNode.GetAttributeValue("id", "")
-                            };
-                        }
-
-                        // Add the text of the current node to the current page
-                        sb.AppendLine(node.InnerText);
+                        pages.Add(new Page { Number = pageNumber.ToString(), Text = string.Join(" ", pageText) });
+                        pageText = new List<string>();
+                        pageNumber++;
                     }
-
-                    // Add the last page to the book
-                    if (page != null)
-                    {
-                        page.Text = sb.ToString().Trim();
-                        b.Pages.Add(page);
-                    }
+                    pageText.Add(sentence.Trim());
                 }
             }
 
-
-            foreach (var n in selectedBook.Navigation)
+            if (pageText.Count > 0)
             {
-                Chapter chapter = new();
-                chapter.Title = n.Title;
-                EpubLocalTextContentFile contentFile = (EpubLocalTextContentFile)selectedBook.Content.AllFiles.Local.First(i => i.ContentLocation == n.HtmlContentFile.ContentLocation);
-              
-                chapter.HTML = contentFile.Content;
-                //TODO Parse HTML
-                
-                b.Chapters.Add(chapter);
-
-
+                pages.Add(new Page { Number = pageNumber.ToString(), Text = string.Join(" ", pageText) });
             }
 
+            b.Pages = pages;
 
             return b;
+
+
+
+            //foreach (var n in selectedBook.Navigation)
+            //{
+            //    Chapter chapter = new();
+            //    chapter.Title = n.Title;
+            //    EpubLocalTextContentFile contentFile = (EpubLocalTextContentFile)selectedBook.Content.AllFiles.Local.First(i => i.ContentLocation == n.HtmlContentFile.ContentLocation);
+
+            //    chapter.HTML = contentFile.Content;
+            //    //TODO Parse HTML
+
+            //    b.Chapters.Add(chapter);
+
+
+            //}
+
+
+            //return b;
         }
     }
 }
