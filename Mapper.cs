@@ -58,9 +58,10 @@ namespace Reading_Buddy
             {
                 Chapter chapter = new();
                 chapter.Title = n.Title;
-                EpubLocalTextContentFile contentFile = (EpubLocalTextContentFile)selectedBook.Content.AllFiles.Local.First(i => i.ContentLocation == n.HtmlContentFile.ContentLocation);
-
-                chapter.HTML = contentFile.Content;
+                //EpubLocalTextContentFile contentFile = (EpubLocalTextContentFile)selectedBook.Content.AllFiles.Local.First(i => i.ContentLocation == n.HtmlContentFile.ContentLocation);
+                //EpubLocalTextContentFile contentFile = (EpubLocalTextContentFile)selectedBook.Navigation.Select(c => c.HtmlContentFile.Content).FirstOrDefault();
+                chapter.HTML = n.HtmlContentFile.Content;
+                chapter.Number = b.Chapters.Count;
                 //TODO Parse HTML
 
                 b.Chapters.Add(chapter);
